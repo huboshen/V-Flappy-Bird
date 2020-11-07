@@ -21,6 +21,13 @@ const BIRD_DIMENTIONS = {
     width: 34,
     height: 24,
 };
+
+// Settings Related to the game difficulty
+const SETTINGS = {
+    pipeInterval: 120,
+    pipeGapMin: 4 * BIRD_DIMENTIONS.height,
+    pipeGapMax: 7 * BIRD_DIMENTIONS.height,
+};
 import Pipe from "@/components/Pipe";
 import Bird from "@/components/Bird";
 export default {
@@ -31,9 +38,6 @@ export default {
     },
     data() {
         return {
-            settings: {
-                pipeGap: 0,
-            },
             pipes: [],
             pipeMover: null,
         };
@@ -46,11 +50,11 @@ export default {
             return Math.floor(Math.random() * (max - min + 1) + min);
         },
         generatePipe() {
-            const gapMin = 4 * BIRD_DIMENTIONS.height;
-            const gapMax = 7 * BIRD_DIMENTIONS.height;
             const fixEdge = 30;
-
-            const currentGap = this.randomIntFromInterval(gapMin, gapMax);
+            const currentGap = this.randomIntFromInterval(
+                SETTINGS.pipeGapMin,
+                SETTINGS.pipeGapMax
+            );
             const currentExtendOffset = this.randomIntFromInterval(
                 0,
                 -(-PIPE_DIMENTIONS.height + fixEdge)
@@ -70,6 +74,10 @@ export default {
                     if (pipe.right >= backgroundWidth) {
                         this.pipes.shift();
                     }
+
+                    if (this.pipes[this.pipes.length - 1].right > SETTINGS.pipeInterval) {
+                        this.generatePipe();
+                    }
                     pipe.right += 2;
                     console.log(".offsetWidth", backgroundWidth);
                 });
@@ -78,7 +86,7 @@ export default {
     },
     mounted() {
         this.generatePipe();
-        this.movePipe();
+        // this.movePipe();
     },
 };
 </script>
