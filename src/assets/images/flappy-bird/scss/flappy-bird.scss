@@ -1,0 +1,57 @@
+$css-sprite-path: "~@/assets/images/flappy-bird/all.png";
+$playground-width: 288px;
+
+// Playground
+#flappy-bird-wrapper {
+    width: $playground-width;
+    margin: 0 auto;
+
+    // Pipe
+    ::v-deep .pipe-wrapper {
+        width: 52px;
+        height: 100%;
+        position: absolute;
+        user-select: none;
+    }
+
+    ::v-deep .pipe {
+        position: absolute;
+        left: 0;
+        border: 0;
+        &.pipe-top {
+            background: url($css-sprite-path) no-repeat -112px -646px;
+            width: 52px;
+            height: 320px;
+        }
+        &.pipe-bottom {
+            background: url($css-sprite-path) no-repeat -168px -646px;
+            width: 52px;
+            height: 320px;
+        }
+    }
+
+    // Bird
+    ::v-deep .bird {
+        width: 34px;
+        height: 24px;
+        position: absolute;
+        top: 300px;
+        left: 100px;
+        background: url($css-sprite-path) -230px -658px;
+    }
+}
+#background {
+    width: $playground-width;
+    height: 400px;
+    position: relative;
+    &.daylight {
+        background: url($css-sprite-path) no-repeat 0 0;
+    }
+    &.night {
+        background: url($css-sprite-path) no-repeat -292px 0;
+    }
+}
+#ground {
+    background: url($css-sprite-path) no-repeat -584px 0;
+    height: 112px;
+}
