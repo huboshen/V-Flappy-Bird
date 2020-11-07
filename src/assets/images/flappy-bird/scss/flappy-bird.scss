@@ -5,6 +5,7 @@ $playground-width: 288px;
 #flappy-bird-wrapper {
     width: $playground-width;
     margin: 0 auto;
+    overflow: hidden;
 
     // Pipe
     ::v-deep .pipe-wrapper {
@@ -12,21 +13,24 @@ $playground-width: 288px;
         height: 100%;
         position: absolute;
         user-select: none;
-    }
+        right: -52px;
 
-    ::v-deep .pipe {
-        position: absolute;
-        left: 0;
-        border: 0;
-        &.pipe-top {
-            background: url($css-sprite-path) no-repeat -112px -646px;
-            width: 52px;
-            height: 320px;
-        }
-        &.pipe-bottom {
-            background: url($css-sprite-path) no-repeat -168px -646px;
-            width: 52px;
-            height: 320px;
+        .pipe {
+            position: absolute;
+            left: 0;
+            border: 0;
+            &.pipe-top {
+                background: url($css-sprite-path) no-repeat -112px -646px;
+                width: 52px;
+                height: 320px;
+                top: -290px;
+            }
+            &.pipe-bottom {
+                background: url($css-sprite-path) no-repeat -168px -646px;
+                width: 52px;
+                height: 320px;
+                top: 70px;
+            }
         }
     }
 

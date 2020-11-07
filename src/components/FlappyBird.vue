@@ -1,14 +1,26 @@
 <template>
     <div id="flappy-bird-wrapper" class="">
-        <div id="background" class="night">
-            <bird></bird>
-            <pipe></pipe>
+        <div id="background" ref="background" class="night">
+            <bird ref="bird"></bird>
+            <pipe v-for="(pipe, i) in pipes" :key="i" :pipe-style="pipe"></pipe>
         </div>
         <div id="ground"></div>
     </div>
 </template>
 
 <script>
+const PLAYGROUND_DIMENTIONS = {
+    width: 288,
+    height: 400,
+};
+const PIPE_DIMENTIONS = {
+    width: 52,
+    height: 320,
+};
+const BIRD_DIMENTIONS = {
+    width: 34,
+    height: 24,
+};
 import Pipe from "@/components/Pipe";
 import Bird from "@/components/Bird";
 export default {
@@ -17,7 +29,57 @@ export default {
         Pipe,
         Bird,
     },
+    data() {
+        return {
+            settings: {
+                pipeGap: 0,
+            },
+            pipes: [],
+            pipeMover: null,
+        };
+    },
     props: {},
+    methods: {
+        // ref: https://stackoverflow.com/questions/4959975/generate-random-number-between-two-numbers-in-javascript
+        randomIntFromInterval(min, max) {
+            // min and max included
+            return Math.floor(Math.random() * (max - min + 1) + min);
+        },
+        generatePipe() {
+            const gapMin = 4 * BIRD_DIMENTIONS.height;
+            const gapMax = 7 * BIRD_DIMENTIONS.height;
+            const fixEdge = 30;
+
+            const currentGap = this.randomIntFromInterval(gapMin, gapMax);
+            const currentExtendOffset = this.randomIntFromInterval(
+                0,
+                -(-PIPE_DIMENTIONS.height + fixEdge)
+            );
+            this.pipes.push({
+                right: -PIPE_DIMENTIONS.width,
+                pipeTopTop:
+                    -PIPE_DIMENTIONS.height + fixEdge + currentExtendOffset,
+                pipeBottomTop: currentExtendOffset + currentGap,
+            });
+        },
+        movePipe() {
+            const backgroundWidth = this.$refs.background.offsetWidth;
+            this.pipeMover = setInterval(() => {
+                this.pipes.forEach((pipe) => {
+                    // remove pipe if is outside of the game left border
+                    if (pipe.right >= backgroundWidth) {
+                        this.pipes.shift();
+                    }
+                    pipe.right += 2;
+                    console.log(".offsetWidth", backgroundWidth);
+                });
+            }, 20);
+        },
+    },
+    mounted() {
+        this.generatePipe();
+        this.movePipe();
+    },
 };
 </script>
 
