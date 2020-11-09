@@ -1,7 +1,7 @@
 <template>
     <div id="flappy-bird-wrapper" class="">
         <div id="background" ref="background" class="night">
-            <bird ref="bird"></bird>
+            <bird :bird-style="bird" ref="bird"></bird>
             <pipe v-for="(pipe, i) in pipes" :key="i" :pipe-style="pipe"></pipe>
         </div>
         <div id="ground"></div>
@@ -24,7 +24,7 @@ const BIRD_DIMENTIONS = {
 
 // Settings Related to the game difficulty
 const SETTINGS = {
-    pipeInterval: 120,
+    pipeInterval: 150,
     pipeGapMin: 4 * BIRD_DIMENTIONS.height,
     pipeGapMax: 7 * BIRD_DIMENTIONS.height,
 };
@@ -38,8 +38,10 @@ export default {
     },
     data() {
         return {
+            bird: { bottom: 200, left: 50 },
             pipes: [],
             pipeMover: null,
+            birdMover: null,
         };
     },
     props: {},
@@ -57,13 +59,12 @@ export default {
             );
             const currentExtendOffset = this.randomIntFromInterval(
                 0,
-                -(-PIPE_DIMENTIONS.height + fixEdge)
+                -(-PIPE_DIMENTIONS.height + fixEdge * 4)
             );
             this.pipes.push({
                 right: -PIPE_DIMENTIONS.width,
-                pipeTopTop:
-                    -PIPE_DIMENTIONS.height + fixEdge + currentExtendOffset,
-                pipeBottomTop: currentExtendOffset + currentGap,
+                pipeTopTop: -PIPE_DIMENTIONS.height + 30 + currentExtendOffset,
+                pipeBottomTop: fixEdge + currentExtendOffset + currentGap,
             });
         },
         movePipe() {
@@ -75,16 +76,57 @@ export default {
                         this.pipes.shift();
                     }
 
-                    if (this.pipes[this.pipes.length - 1].right > SETTINGS.pipeInterval) {
+                    if (
+                        this.pipes[this.pipes.length - 1].right >
+                        SETTINGS.pipeInterval
+                    ) {
                         this.generatePipe();
                     }
-                    pipe.right += 2;
-                    console.log(".offsetWidth", backgroundWidth);
+                    pipe.right += 1;
                 });
             }, 20);
         },
+        moveBird() {},
     },
     mounted() {
+        const vm = this;
+        document.onkeydown = ({ keyCode }) => {
+            if (keyCode == 32) {
+                // https://javascript.info/js-animation#:~:text=Using%20setInterval,second%2C%20then%20it%20looks%20smooth.
+                function animate({ timing, draw }) {
+                    let start = performance.now();
+
+                    vm.requestID = requestAnimationFrame(function animate(
+                        time
+                    ) {
+                        // timeElapsed goes from 0 to 1
+                        let timeElapsed = (time - start) / 1000; // seconds
+
+                        // calculate the current animation state
+                        let progress = timing(timeElapsed);
+
+                        draw(progress); // draw it
+
+                        if (vm.bird.bottom >= 0) {
+                            vm.requestID = requestAnimationFrame(animate);
+                        } else {
+                            vm.bird.bottom = 0;
+                        }
+                    });
+                }
+
+                function back(timeElapsed) {
+                    return -40 * Math.pow(timeElapsed - 0.12, 2) + 2.1;
+                }
+
+                function draw(progress) {
+                    vm.bird.bottom += progress;
+                }
+
+                if (vm.requestID) cancelAnimationFrame(vm.requestID);
+                animate({ timing: back, draw });
+            }
+        };
         this.generatePipe();
         // this.movePipe();
     },
