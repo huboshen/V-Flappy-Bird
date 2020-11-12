@@ -1,9 +1,12 @@
 $css-sprite-path: "~@/assets/images/flappy-bird/all.png";
 $playground-width: 288px;
+$playground-height: 400px;
+$ground-height: 112px;
 
 // Playground
 #flappy-bird-wrapper {
     width: $playground-width;
+    height: $playground-height + $ground-height;
     margin: 0 auto;
     overflow: hidden;
 
@@ -14,6 +17,7 @@ $playground-width: 288px;
         position: absolute;
         user-select: none;
         right: -52px;
+        overflow: hidden;
 
         .pipe {
             position: absolute;
@@ -41,10 +45,23 @@ $playground-width: 288px;
         position: absolute;
         background: url($css-sprite-path) -230px -658px;
     }
+
+    ::v-deep #game-over-panel {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        top: -380px;
+        #game-over-title {
+            background: url($css-sprite-path) no-repeat -784px -116px;
+            width: 204px;
+            height: 54px;
+            margin: auto;
+        }
+    }
 }
 #background {
     width: $playground-width;
-    height: 400px;
+    height: $playground-height;
     position: relative;
     &.daylight {
         background: url($css-sprite-path) no-repeat 0 0;
@@ -55,5 +72,5 @@ $playground-width: 288px;
 }
 #ground {
     background: url($css-sprite-path) no-repeat -584px 0;
-    height: 112px;
+    height: $ground-height;
 }
