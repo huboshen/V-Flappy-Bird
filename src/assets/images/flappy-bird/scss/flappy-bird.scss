@@ -2,6 +2,31 @@ $css-sprite-path: "~@/assets/images/flappy-bird/all.png";
 $playground-width: 288px;
 $playground-height: 400px;
 $ground-height: 112px;
+// for digits
+$digits: (
+    0: -992px -120px,
+    1: -272px -910px,
+    2: -584px -320px,
+    3: -612px -320px,
+    4: -640px -320px,
+    5: -668px -320px,
+    6: -584px -368px,
+    7: -612px -368px,
+    8: -640px -368px,
+    9: -668px -368px,
+);
+$sm_digits: (
+    0: -276px -646px,
+    1: -282px -664px,
+    2: -276px -698px,
+    3: -276px -716px,
+    4: -276px -750px,
+    5: -276px -768px,
+    6: -276px -802px,
+    7: -276px -820px,
+    8: -276px -854px,
+    9: -276px -872px,
+);
 
 // Playground
 #flappy-bird-wrapper {
@@ -50,12 +75,24 @@ $ground-height: 112px;
         position: relative;
         z-index: 1;
         width: 100%;
-        top: -380px;
+        top: -440px;
         #game-over-title {
             background: url($css-sprite-path) no-repeat -784px -116px;
             width: 204px;
             height: 54px;
             margin: auto;
+        }
+
+        // for digits
+        #current-score-box {
+            text-align: center;
+            margin-bottom: 10px;
+
+            .label-new {
+                position: relative;
+                top: -28px;
+                left: 1px;
+            }
         }
     }
 }
@@ -73,4 +110,45 @@ $ground-height: 112px;
 #ground {
     background: url($css-sprite-path) no-repeat -584px 0;
     height: $ground-height;
+
+    ::v-deep #best-score-box {
+        position: relative;
+        top: 94px;
+        padding-right: 4px;
+        text-align: end;
+    }
+}
+
+@each $key, $value in $digits {
+    ::v-deep .digit-#{$key} {
+        display: inline-block;
+        background: url($css-sprite-path) no-repeat $value;
+        @if $key == 1 {
+            width: 16px;
+        } @else {
+            width: 24px;
+        }
+        height: 36px;
+    }
+}
+
+@each $key, $value in $sm_digits {
+    ::v-deep .digit-sm-#{$key} {
+        display: inline-block;
+        background: url($css-sprite-path) no-repeat $value;
+        @if $key == 1 {
+            width: 6px;
+        } @else {
+            width: 12px;
+        }
+        height: 14px;
+    }
+}
+
+// new score tag
+::v-deep .label-new {
+    display: inline-block;
+    background: url($css-sprite-path) no-repeat -224px -1002px;
+    width: 32px;
+    height: 14px;
 }

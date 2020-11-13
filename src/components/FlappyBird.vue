@@ -4,11 +4,12 @@
             <bird :bird-style="bird" ref="bird"></bird>
             <pipe v-for="(pipe, i) in pipes" :key="i" :pipe-style="pipe"></pipe>
         </div>
-        <div id="ground"></div>
-        <game-over-panel
-            v-show="showGameOverPanel"
+        <ground :best-score-digits="bestScoreDigits"></ground>
+        <game-panel
+            :show-game-over-title="showGameOverTitle"
             :score="score"
-        ></game-over-panel>
+            :has-break-record="hasBreakRecord"
+        ></game-panel>
     </div>
 </template>
 
@@ -34,13 +35,15 @@ const SETTINGS = {
 };
 import Pipe from "@/components/Pipe";
 import Bird from "@/components/Bird";
-import GameOverPanel from "@/components/GameOverPanel";
+import GamePanel from "@/components/GamePanel";
+import Ground from "@/components/Ground";
 export default {
     name: "FlappyBird",
     components: {
         Pipe,
         Bird,
-        GameOverPanel,
+        GamePanel,
+        Ground,
     },
     data() {
         return {
@@ -52,10 +55,16 @@ export default {
             pipeMoveRID: null,
             isGaming: false,
             score: 0,
-            showGameOverPanel: false,
+            showGameOverTitle: false,
+            bestScore: 0,
+            hasBreakRecord: false,
         };
     },
-    props: {},
+    computed: {
+        bestScoreDigits() {
+            return Array.from(String(this.bestScore), Number);
+        },
+    },
     methods: {
         // ref: https://stackoverflow.com/questions/4959975/generate-random-number-between-two-numbers-in-javascript
         randomIntFromInterval(min, max) {
@@ -167,6 +176,12 @@ export default {
                         if (vm.birdMoveRID)
                             cancelAnimationFrame(vm.birdMoveRID);
                         animate({ timing, draw });
+                    } else {
+                        // start/restart the game
+                        vm.resetGameData();
+                        vm.isGaming = true;
+                        this.generatePipe();
+                        this.movePipe();
                     }
                 }
 
@@ -228,7 +243,8 @@ export default {
             this.isGaming = false;
             if (this.pipeMoveRID) cancelAnimationFrame(this.pipeMoveRID);
             if (this.birdMoveRID) cancelAnimationFrame(this.birdMoveRID);
-            this.showGameOverPanel = true;
+            this.handleBestScore();
+            this.showGameOverTitle = true;
         },
         resetGameData() {
             this.bird = { bottom: 200, left: 80 };
@@ -239,10 +255,23 @@ export default {
             this.pipeMoveRID = null;
             this.isGaming = false;
             this.score = 0;
-            this.showGameOverPanel = false;
+            this.showGameOverTitle = false;
+            this.hasBreakRecord = false;
+        },
+        getBestScore() {
+            this.bestScore =
+                localStorage.getItem("myVFlappyBirdBestScore") || 0;
+        },
+        handleBestScore() {
+            if (this.score > this.bestScore) {
+                this.bestScore = this.score;
+                this.hasBreakRecord = true;
+                localStorage.setItem("myVFlappyBirdBestScore", this.bestScore);
+            }
         },
     },
     mounted() {
+        this.getBestScore();
         this.moveBird();
     },
 };
