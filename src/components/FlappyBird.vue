@@ -89,7 +89,7 @@ export default {
             );
             this.pipes.push({
                 right: -PIPE_DIMENTIONS.width,
-                pipeTopTop: -PIPE_DIMENTIONS.height + 30 + currentExtendOffset,
+                pipeTopTop: -PIPE_DIMENTIONS.height + 38 + currentExtendOffset,
                 pipeBottomTop: fixEdge + currentExtendOffset + currentGap,
                 status: "inComing",
             });
@@ -157,14 +157,6 @@ export default {
                     // calculate the current animation state
                     let progress = timing(timeElapsed);
 
-                    draw(progress); // draw it
-
-                    if (vm.bird.bottom >= 0) {
-                        vm.birdMoveRID = requestAnimationFrame(animate);
-                    } else {
-                        // touch bottom, game over
-                        vm.handleGameOver();
-                    }
                     // check bird is jumping or falling
                     if (progress >= 0) {
                         // jumping, bird facing up
@@ -176,10 +168,25 @@ export default {
                         // failling sharply, bird facing down
                         vm.bird.rotate = 30;
                     }
+
+                    draw(progress); // draw it
+
+                    if (vm.bird.bottom >= 0) {
+                        vm.birdMoveRID = requestAnimationFrame(animate);
+                    } else {
+                        // touch bottom, game over
+                        vm.handleGameOver();
+                    }
                 });
             }
             function timing(timeElapsed) {
-                return -40 * Math.pow(timeElapsed - 0.12, 2) + 2.1;
+                // use different epression for lifting or failing movement.
+                const exprLifting = -40 * Math.pow(timeElapsed - 0.12, 2) + 3;
+                if (exprLifting > 0) {
+                    return exprLifting;
+                } else {
+                    return -8 * Math.pow(timeElapsed - 0.12, 2) + 1.5;
+                }
             }
 
             function draw(progress) {
