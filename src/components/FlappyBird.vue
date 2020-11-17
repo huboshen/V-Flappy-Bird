@@ -1,7 +1,7 @@
 <template>
     <div id="flappy-bird-wrapper" class="">
-        <div id="background" ref="background" class="night">
-            <bird :bird-style="bird" ref="bird"></bird>
+        <div id="background" ref="background" :class="backgroundClass">
+            <bird :bird-style="bird" ref="bird"> </bird>
             <pipe v-for="(pipe, i) in pipes" :key="i" :pipe-style="pipe"></pipe>
         </div>
         <ground :best-score-digits="bestScoreDigits"></ground>
@@ -47,7 +47,8 @@ export default {
     },
     data() {
         return {
-            bird: { bottom: 200, left: 80 },
+            backgroundClass: this.getNewBackgroundClass(),
+            bird: { bottom: 200, left: 80, rotate: 0 },
             pipes: [],
             pipeMover: null,
             birdMover: null,
@@ -66,6 +67,11 @@ export default {
         },
     },
     methods: {
+        // Random generate a background
+        // either a daylight background or a night one
+        getNewBackgroundClass() {
+            return Math.random() <= 0.5 ? "daylight" : "night";
+        },
         // ref: https://stackoverflow.com/questions/4959975/generate-random-number-between-two-numbers-in-javascript
         randomIntFromInterval(min, max) {
             // min and max included
@@ -156,7 +162,19 @@ export default {
                     if (vm.bird.bottom >= 0) {
                         vm.birdMoveRID = requestAnimationFrame(animate);
                     } else {
-                        vm.bird.bottom = 0;
+                        // touch bottom, game over
+                        vm.handleGameOver();
+                    }
+                    // check bird is jumping or falling
+                    if (progress >= 0) {
+                        // jumping, bird facing up
+                        vm.bird.rotate = -30;
+                    } else if (progress > -7) {
+                        // failling a little bit, bird facing forward
+                        vm.bird.rotate = 0;
+                    } else {
+                        // failling sharply, bird facing down
+                        vm.bird.rotate = 30;
                     }
                 });
             }
@@ -169,8 +187,8 @@ export default {
             }
 
             return ({ keyCode }) => {
-                // space
-                if (keyCode === 32) {
+                // space or enter
+                if (keyCode === 32 || keyCode === 13) {
                     if (vm.isGaming) {
                         // clicking space for bird jumping
                         if (vm.birdMoveRID)
@@ -182,16 +200,8 @@ export default {
                         vm.isGaming = true;
                         this.generatePipe();
                         this.movePipe();
+                        animate({ timing, draw });
                     }
-                }
-
-                // enter
-                if (!vm.isGaming && keyCode === 13) {
-                    // start/restart the game
-                    vm.resetGameData();
-                    vm.isGaming = true;
-                    this.generatePipe();
-                    this.movePipe();
                 }
 
                 if (keyCode === 83) {
@@ -257,6 +267,7 @@ export default {
             this.score = 0;
             this.showGameOverTitle = false;
             this.hasBreakRecord = false;
+            this.backgroundClass = this.getNewBackgroundClass();
         },
         getBestScore() {
             this.bestScore =

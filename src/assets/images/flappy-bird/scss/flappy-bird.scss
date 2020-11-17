@@ -63,14 +63,6 @@ $sm_digits: (
         }
     }
 
-    // Bird
-    ::v-deep .bird {
-        width: 34px;
-        height: 24px;
-        position: absolute;
-        background: url($css-sprite-path) -230px -658px;
-    }
-
     ::v-deep #game-over-panel {
         position: relative;
         z-index: 1;
@@ -151,4 +143,18 @@ $sm_digits: (
     background: url($css-sprite-path) no-repeat -224px -1002px;
     width: 32px;
     height: 14px;
+}
+
+// Bird
+::v-deep .bird {
+    width: 34px;
+    height: 24px;
+    position: absolute;
+    background: url($css-sprite-path) no-repeat -6px -982px;
+    animation: bflying 0.8s steps(2) infinite both;
+}
+@keyframes bflying {
+    50% {
+        background-position-x: -118px;
+    }
 }

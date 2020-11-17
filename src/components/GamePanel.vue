@@ -8,7 +8,9 @@
             ></div>
             <div class="label-new" v-if="hasBreakRecord"></div>
         </div>
-        <div id="game-over-title" v-show="showGameOverTitle"></div>
+        <transition name="fade">
+            <div id="game-over-title" v-show="showGameOverTitle"></div>
+        </transition>
     </div>
 </template>
 
@@ -37,4 +39,12 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 2s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+}
+</style>

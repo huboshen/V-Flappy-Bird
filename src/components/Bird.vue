@@ -1,8 +1,14 @@
 <template>
     <div
-        :style="{ bottom: birdStyle.bottom + 'px', left: birdStyle.left + 'px' }"
+        :style="{
+            bottom: birdStyle.bottom + 'px',
+            left: birdStyle.left + 'px',
+            transform: 'rotate(' + birdStyle.rotate + 'deg)',
+        }"
         class="bird"
-    ></div>
+    >
+        <div class="bird-flying"></div>
+    </div>
 </template>
 
 <script>
