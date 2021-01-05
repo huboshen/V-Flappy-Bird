@@ -140,11 +140,16 @@ export default {
         moveBird() {
             document.addEventListener(
                 "keydown",
+                this.spaceEventListener("keycode"),
+                false
+            );
+            document.addEventListener(
+                "touchend",
                 this.spaceEventListener(),
                 false
             );
         },
-        spaceEventListener() {
+        spaceEventListener(mode) {
             const vm = this;
             // https://javascript.info/js-animation#:~:text=Using%20setInterval,second%2C%20then%20it%20looks%20smooth.
             function animate({ timing, draw }) {
@@ -193,29 +198,40 @@ export default {
                 vm.bird.bottom += progress;
             }
 
-            return ({ keyCode }) => {
-                // space or enter
-                if (keyCode === 32 || keyCode === 13) {
-                    if (vm.isGaming) {
-                        // clicking space for bird jumping
+            function spaceBehaviorHandler() {
+                if (vm.isGaming) {
+                    // clicking space for bird jumping
+                    if (vm.birdMoveRID) cancelAnimationFrame(vm.birdMoveRID);
+                    animate({ timing, draw });
+                } else {
+                    // start/restart the game
+                    vm.resetGameData();
+                    vm.isGaming = true;
+                    vm.generatePipe();
+                    vm.movePipe();
+                    animate({ timing, draw });
+                }
+            }
+
+            if (mode === "keycode") {
+                return ({ keyCode }) => {
+                    // space or enter
+                    if (keyCode === 32 || keyCode === 13) {
+                        spaceBehaviorHandler();
+                    }
+
+                    if (keyCode === 83) {
+                        if (vm.pipeMoveRID)
+                            cancelAnimationFrame(vm.pipeMoveRID);
                         if (vm.birdMoveRID)
                             cancelAnimationFrame(vm.birdMoveRID);
-                        animate({ timing, draw });
-                    } else {
-                        // start/restart the game
-                        vm.resetGameData();
-                        vm.isGaming = true;
-                        this.generatePipe();
-                        this.movePipe();
-                        animate({ timing, draw });
                     }
-                }
-
-                if (keyCode === 83) {
-                    if (vm.pipeMoveRID) cancelAnimationFrame(vm.pipeMoveRID);
-                    if (vm.birdMoveRID) cancelAnimationFrame(vm.birdMoveRID);
-                }
-            };
+                };
+            } else {
+                return () => {
+                    spaceBehaviorHandler();
+                };
+            }
         },
         gameStatusHandler() {
             const nearestPipe = this.pipes.find(
