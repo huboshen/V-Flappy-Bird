@@ -5,6 +5,10 @@
 ## Demo
 https://huboshen.github.io/v-flappy-bird/
 
+## How to use it
+:baby_chick: Click "space" or "enter" to start/control/restart the game.  
+:iphone: If you are on a mobilephone, press the screen.
+
 ## Installation
 Clone the repository and go to the project root directory, then install the npm packages by
 ```bash
