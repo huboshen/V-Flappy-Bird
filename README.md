@@ -1,24 +1,21 @@
-# my-v-flappy-bird
+# V Flappy Bird
 
-## Project setup
-```
+> A implementation of the flappy bird game based Vue.js.
+
+## Demo
+https://huboshen.github.io/v-flappy-bird/
+
+## Installation
+Clone the repository and go to the project root directory, then install the npm packages by
+```bash
 npm install
 ```
-
-### Compiles and hot-reloads for development
-```
+Compile and run the application by
+```bash
 npm run serve
 ```
+By default, the application runs on:
+http://localhost:8080/v-flappy-bird/
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## License
+MIT
