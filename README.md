@@ -1,3 +1,7 @@
+<p align="center">
+  <img width="212" height="379" src="https://github.com/huboshen/v-flappy-bird/blob/master/public/preview.png" />
+</p>
+
 # V Flappy Bird
 
 > A implementation of the flappy bird game based Vue.js.
