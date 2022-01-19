@@ -18,6 +18,7 @@ Clone the repository and go to the project root directory, then install the npm 
 ```bash
 npm install
 ```
+(Ideally using **nodejs 14**, otherwise, node-sass version need to be changed to support the node version)
 Compile and run the application by
 ```bash
 npm run serve
