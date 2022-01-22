@@ -14,6 +14,7 @@ https://huboshen.github.io/v-flappy-bird/
 :iphone: If you are on a mobilephone, press the screen.
 
 ## Installation
+**Please use nodejs 14 for supporting node-sass 5.0 in the dependency.**  
 Clone the repository and go to the project root directory, then install the npm packages by
 ```bash
 npm install
