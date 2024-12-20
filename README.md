@@ -7,7 +7,7 @@
 > A implementation of the flappy bird game based Vue.js.
 
 ## Demo
-https://huboshen.github.io/v-flappy-bird/
+https://huboshen.github.io/V-Flappy-Bird/
 
 ## How to use it
 :baby_chick: Click "space" or "enter" to start/control/restart the game.  
@@ -25,7 +25,7 @@ Compile and run the application by
 npm run serve
 ```
 By default, the application runs on:
-http://localhost:8080/v-flappy-bird/
+http://localhost:8080/V-Flappy-Bird/
 
 ## License
 MIT
